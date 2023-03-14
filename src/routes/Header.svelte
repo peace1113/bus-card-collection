@@ -10,13 +10,12 @@
 <TopAppBar
 	variant="static"
 	prominent={false}
-	dense={true}
 	color={"secondary"}
 >
 	<Row>
 		<Section>
 			<IconButton class="material-icons" on:click={() => open = !open}>menu</IconButton>
-			<Title>Greed Island</Title>
+			<Title>Bus Card Collection</Title>
 		</Section>
 		<Section align="end" toolbar={true}>
 			<IconButton class="material-icons" aria-label="account_circle" on:click={() => location.replace('/')}>

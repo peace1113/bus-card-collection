@@ -21,12 +21,12 @@
           <Text>首頁</Text>
         </Item>
 		<Item
-		href="/card-slot"
-		on:click={() => setActive("card-slot")}
-		activated={active === "card-slot"}
+		href="/card-dex"
+		on:click={() => setActive("card-dex")}
+		activated={active === "card-dex"}
 	  >
-		<Graphic class="material-icons" aria-hidden="true">library_books</Graphic>
-		<Text>卡片口袋</Text>
+		<Graphic class="material-icons" aria-hidden="true">collections_bookmark</Graphic>
+		<Text>卡片圖鑑</Text>
 	  </Item>
 	  </List>
     </Content>
