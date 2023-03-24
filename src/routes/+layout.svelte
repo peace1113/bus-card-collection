@@ -1,15 +1,20 @@
 <script>
 	import Header from './Header.svelte';
 	import './styles.css';
+	import Menu from './Menu.svelte';
+
+	let openMenu = false;
+
+	
 </script>
 
 <div class="app">
-	<Header/>
+	<Header bind:open={openMenu}/>
 	<main>
+		<Menu bind:open={openMenu}/>
 		<slot/>
 	</main>
 	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
 	</footer>
 </div>
 
@@ -24,7 +29,6 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
 		width: 100%;
 		max-width: 72rem;
 		margin: 0 auto;

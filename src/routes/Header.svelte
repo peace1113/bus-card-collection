@@ -4,13 +4,13 @@
 	import IconButton from "@smui/icon-button";
     import Drawer from "./Menu.svelte";
 
-	let open = false;
+	export let open = false;
 </script>
 
 <TopAppBar
 	variant="static"
 	prominent={false}
-	color={"secondary"}
+	color={"primary"}
 >
 	<Row>
 		<Section>
@@ -24,4 +24,3 @@
 		</Section>
 	</Row>
 </TopAppBar>
-<Drawer bind:open />
