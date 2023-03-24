@@ -9,9 +9,7 @@
   export let title: string;
   export let level: number;
   export let description: string;
-  export const imgSrc: string = "https://static1.srcdn.com/wordpress/wp-content/uploads/Bulbasaur-Looking-Up.jpg";
-
-
+  export let imgSrc: string;
 </script>
 
 <Card>
