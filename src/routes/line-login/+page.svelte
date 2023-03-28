@@ -1,11 +1,5 @@
 <script lang="ts">
-    import {page} from '$app/stores';
     import Button, {Label} from '@smui/button';
-
-    const url = $page.url;
-
-    console.log(url);
-    console.log(url.searchParams.get('id'));
 
     function lineLogin(){
         let client_id = '1660740786';
