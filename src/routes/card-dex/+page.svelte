@@ -4,7 +4,6 @@
 	import BusCard from "../../components/BusCard.svelte";
     import type CardDex from "../../models/CardDex";
 	import CircularProgress from '@smui/circular-progress';
-	import MediaQuery from 'svelte-media-queries';
 	import Accordion, { Panel, Header, Content } from '@smui-extra/accordion';
 
 	let allCards : Array<CardDex> = new Array<CardDex>();
@@ -21,9 +20,8 @@
 	<meta name="description" content="Card Slot" />
 </svelte:head>
 
-<MediaQuery query='(max-width: 480px)' bind:matches>
-	{#if matches}
-	<Accordion>
+<div class="showOnMobile">
+	<Accordion style="margin: 1rem;">
 		{#each allCards as card, i}
 			<Panel>
 				<Header>{card.name}</Header>
@@ -34,8 +32,8 @@
 			</Panel>
 		{/each}
 	</Accordion>
-
-	{:else}
+</div>
+<div class="showOnDesktop">
 	<LayoutGrid>
 		{#each allCards as card, i}
 			<Cell spanDevices={{ desktop: 3, phone: 4}}>
@@ -49,8 +47,27 @@
 				</div>
 			</Cell>
 		{/each}
-	</LayoutGrid>	
-	{/if}
+	</LayoutGrid>
+</div>
 
-</MediaQuery>
+<style>
+	@media all and (max-width: 480px) {
+		.showOnMobile{
+			display: block;
+		}
 
+		.showOnDesktop{
+			display: none;
+		}
+	}
+
+	@media all and (min-width: 481px) {
+		.showOnMobile{
+			display: none;
+		}
+
+		.showOnDesktop{
+			display: contents;
+		}
+	}
+</style>
