@@ -28,6 +28,14 @@
 		<Graphic class="material-icons" aria-hidden="true">collections_bookmark</Graphic>
 		<Text>卡片圖鑑</Text>
 	  </Item>
+	  <Item
+	  href="/login"
+	  on:click={() => setActive("card-dex")}
+	  activated={active === "card-dex"}
+	>
+	  <Graphic class="material-icons" aria-hidden="true">login</Graphic>
+	  <Text>Line登入</Text>
+	</Item>
 	  </List>
     </Content>
 </Drawer>
