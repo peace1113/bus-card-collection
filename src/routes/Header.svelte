@@ -3,8 +3,9 @@
 	import Section from "@smui/top-app-bar/src/Section.svelte";
 	import IconButton from "@smui/icon-button";
     import Drawer from "./Menu.svelte";
-
+	
 	export let open = false;
+	export let userPicture = 'img/cards/default.jpg';
 </script>
 
 <TopAppBar
@@ -18,9 +19,14 @@
 			<Title>Bus Card Collection</Title>
 		</Section>
 		<Section align="end" toolbar={true}>
-			<IconButton class="material-icons" aria-label="account_circle" on:click={() => location.replace('/')}>
-				account_circle
-			</IconButton>
+			<img class="userPicture" src={userPicture} alt="user picture"/>
 		</Section>
 	</Row>
 </TopAppBar>
+
+<style>
+	.userPicture{
+		border-radius: 50%;
+		height: -webkit-fill-available;
+	}
+</style>

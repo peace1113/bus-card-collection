@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Drawer, {AppContent, Content, Header, Subtitle, Scrim,} from "@smui/drawer";
+	import Drawer, {AppContent, Content, Header, Subtitle, Scrim, Title} from "@smui/drawer";
 	import List, {Item, Text, Graphic, Separator, Subheader} from "@smui/list";
-
 	export let open = false;
+	export let userName = "";
 	let active = "home";
 
 	function setActive(value: string){
@@ -10,6 +10,9 @@
 	}
 </script>
 <Drawer variant="modal" bind:open>
+	<Header>
+		<Title>{userName}</Title>
+	</Header>
     <Content>
       <List>
         <Item
@@ -36,6 +39,15 @@
 	  <Graphic class="material-icons" aria-hidden="true">login</Graphic>
 	  <Text>Line登入</Text>
 	</Item>
+	<Separator></Separator>
+	<Item
+	href="/login"
+	on:click={() => setActive("card-dex")}
+	activated={active === "card-dex"}
+  >
+	<Graphic class="material-icons" aria-hidden="true">logout</Graphic>
+	<Text>登出</Text>
+  </Item>
 	  </List>
     </Content>
 </Drawer>

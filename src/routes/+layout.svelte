@@ -2,16 +2,21 @@
 	import Header from './Header.svelte';
 	import './styles.css';
 	import Menu from './Menu.svelte';
+	import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
 	let openMenu = false;
 
-	
+	export let data;
+	onMount(()=>{
+		if(!data.isLogin) goto(data.loginLink);
+	})
 </script>
 
 <div class="app">
-	<Header bind:open={openMenu}/>
+	<Header bind:open={openMenu} userPicture={data.userPicture}/>
 	<main>
-		<Menu bind:open={openMenu}/>
+		<Menu bind:open={openMenu} userName={data.userName}/>
 		<slot/>
 	</main>
 	<footer>

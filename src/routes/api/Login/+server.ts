@@ -24,8 +24,8 @@ export const GET: RequestHandler = async ({url}) => {
     }).then(async (response) => {
         if(response.ok){
             let token = (await response.json()) as LineToken;
-            let decoded_id_token = jwt.decode(token.id_token);
-            return decoded_id_token;
+            console.log(token);
+            return token;
         }
     }).catch((reason)=>{
         console.log(reason);
