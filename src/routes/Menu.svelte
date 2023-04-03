@@ -3,6 +3,7 @@
 	import List, {Item, Text, Graphic, Separator, Subheader} from "@smui/list";
 	export let open = false;
 	export let userName = "";
+	export let isLogin = false;
 	let active = "home";
 
 	function setActive(value: string){
@@ -23,6 +24,7 @@
           <Graphic class="material-icons" aria-hidden="true">home</Graphic>
           <Text>首頁</Text>
         </Item>
+		{#if isLogin}
 		<Item
 		href="/card-dex"
 		on:click={() => setActive("card-dex")}
@@ -39,6 +41,7 @@
 	  <Graphic class="material-icons" aria-hidden="true">login</Graphic>
 	  <Text>Line登入</Text>
 	</Item>
+	{/if}
 	<Separator></Separator>
 	<Item
 	href="/login"

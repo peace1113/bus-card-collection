@@ -2,10 +2,10 @@
 	import TopAppBar, { Row, Title } from "@smui/top-app-bar";
 	import Section from "@smui/top-app-bar/src/Section.svelte";
 	import IconButton from "@smui/icon-button";
-    import Drawer from "./Menu.svelte";
-	
+	const defaultPicture = 'img/cards/default.jpg';
+
 	export let open = false;
-	export let userPicture = 'img/cards/default.jpg';
+	export let userPicture = '';
 </script>
 
 <TopAppBar
@@ -16,10 +16,10 @@
 	<Row>
 		<Section>
 			<IconButton class="material-icons" on:click={() => open = !open}>menu</IconButton>
-			<Title>Bus Card Collection</Title>
+			<Title>Bus 15</Title>
 		</Section>
 		<Section align="end" toolbar={true}>
-			<img class="userPicture" src={userPicture} alt="user picture"/>
+			<img class="userPicture" src={userPicture == '' ? defaultPicture : userPicture} alt="user picture"/>
 		</Section>
 	</Row>
 </TopAppBar>

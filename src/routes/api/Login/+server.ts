@@ -1,9 +1,14 @@
 import type { RequestHandler } from './$types';
+import {MongoDb_ConnectionString} from '$env/static/private';
+import { MongoClient } from 'mongodb';
 import * as env from '$env/static/private';
 import type LineToken from '../../../models/LineToken';
+import type LineIdToken from '../../../models/LineIdToken';
 import * as jwt from 'jsonwebtoken';
+import type User from '../../../models/User';
 
 const token_uri = 'https://api.line.me/oauth2/v2.1/token';
+const client = new MongoClient(MongoDb_ConnectionString);
 
 export const GET: RequestHandler = async ({url}) => {
     const code = url.searchParams.get('code');
@@ -24,8 +29,28 @@ export const GET: RequestHandler = async ({url}) => {
     }).then(async (response) => {
         if(response.ok){
             let token = (await response.json()) as LineToken;
-            console.log(token);
-            return token;
+            let userInfo = jwt.decode(token.id_token) as LineIdToken;
+            let isUserExistedResult = await isUserExisted(userInfo);
+            if(isUserExistedResult.result){
+                return isUserExistedResult.user;
+            }
+            else{
+                let isBusMemberResult = await isBusMember(userInfo);
+                if(isBusMemberResult.result){
+                    await client.connect();
+                    const database = client.db("BusCards");
+                    const users = database.collection<User>("Users");
+                    let insertUser = {
+                        realName: isBusMemberResult.name, 
+                        lineName: userInfo.name, 
+                        sub: userInfo.sub, 
+                        picture: userInfo.picture,
+                    } as User;
+                    await users.insertOne(insertUser);
+                    return insertUser;
+                }
+                return null;
+            }
         }
     }).catch((reason)=>{
         console.log(reason);
@@ -33,3 +58,45 @@ export const GET: RequestHandler = async ({url}) => {
 
     return new Response(JSON.stringify(result), {status:  200});
 };
+
+const isUserExisted = async (userInfo: LineIdToken) => {
+    try{
+        await client.connect();
+        const database = client.db("BusCards");
+        const users = database.collection<User>("Users");
+        const user = await users.findOne({sub: userInfo.sub});
+
+        if(user){
+            return {result: true, user: user};
+        }
+        else{
+            return {result: false, user: null};
+        }
+    }
+    finally{
+        await client.close();
+    }
+}
+
+const isBusMember = async (userInfo: LineIdToken) => {
+    try{
+        await client.connect();
+        const database = client.db("BusCards");
+        const members = await database.collection("Members").find({});
+        let result = {
+            result: false,
+            name: ""
+        }
+        await members.forEach((member) => {
+            member.keywords.forEach((keyword : string) => {
+                if(userInfo.name.includes(keyword)){
+                    result = {result: true, name: member.name};
+                }
+            })
+        });
+        return result;
+    }
+    finally{
+        await client.close();
+    }
+}

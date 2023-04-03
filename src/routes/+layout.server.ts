@@ -1,7 +1,4 @@
 import * as env from '$env/static/private';
-import type LayoutServerLoad from './$types';
-import {redirect} from '@sveltejs/kit';
-import { goto } from '$app/navigation';
 
 const lineLoginLink : string = (`https://access.line.me/oauth2/v2.1/authorize?response_type=code
 &client_id=${env.LINE_client_id}
@@ -10,13 +7,12 @@ const lineLoginLink : string = (`https://access.line.me/oauth2/v2.1/authorize?re
 &scope=openid%20profile`);
 
 export const load = (async (PageLoadEvent) =>{
-    const lineLogin = PageLoadEvent.cookies.get('linelogin');
-    const isLogin = lineLogin ? true : false;
-    console.log(lineLogin);
+    const lineLogin = PageLoadEvent.cookies.get('lineId');
+    const isLogin = (lineLogin != null) ? true : false;
     return {
         isLogin: isLogin,
         loginLink: lineLoginLink,
-        userName: PageLoadEvent.cookies.get('userName'),
-        userPicture: PageLoadEvent.cookies.get('userPicture'),
+        userName: PageLoadEvent.cookies.get('lineName'),
+        userPicture: PageLoadEvent.cookies.get('linePicture'),
     }
 });

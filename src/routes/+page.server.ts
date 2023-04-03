@@ -1,8 +1,5 @@
-import type LineToken from '../models/LineToken';
-import type LineIdToken from '../models/LineIdToken';
-import type { PageServerLoad } from './$types';
-import * as jwt from 'jsonwebtoken';
 import * as env from '$env/static/private';
+import type User from '../models/User';
 
 const lineLoginLink : string = (`https://access.line.me/oauth2/v2.1/authorize?response_type=code
 &client_id=${env.LINE_client_id}
@@ -10,15 +7,26 @@ const lineLoginLink : string = (`https://access.line.me/oauth2/v2.1/authorize?re
 &state=login
 &scope=openid%20profile`);
 
-export const load = async (RequestEvent) => {    
-    const code = RequestEvent.url.searchParams.get('code');
-    console.log(code);
-    if(code){
-        const token = await (await RequestEvent.fetch('/api/Login?code=' + code)).json() as LineToken;
-        RequestEvent.cookies.set('linelogin', token.id_token);
-
-        const userInfo = jwt.decode(token.id_token) as LineIdToken;
-        RequestEvent.cookies.set('userName', userInfo.name?.toString());
-        RequestEvent.cookies.set('userPicture', userInfo.picture?.toString());
+export const load = async ({url, cookies, fetch}) => {    
+    const code = url.searchParams.get('code');
+    const loginCookie = cookies.get('lineId');
+    //LineAuth
+    if(code != null){        
+        const response  = await fetch('/api/Login?code=' + code);
+        const loginResult = (await response.json() as User) ?? null;
+        if(loginResult){
+            console.log(loginResult);
+            cookies.set('lineId', loginResult.sub);
+            cookies.set('lineName', loginResult.lineName);
+            cookies.set('linePicture', loginResult.picture);
+            return {status: 200, login:{name: loginResult.lineName, picture: loginResult.picture}}
+        }
+        return {status: 404, body: "非巴士團成員"};
     }
+    else if(loginCookie != null){
+        return {status: 200, login:{name: cookies.get('lineName'), picture: cookies.get('linePicture')}};
+    }
+    else {
+        return {status: 203, body: "請登入", loginLink: lineLoginLink};
+    }    
 }

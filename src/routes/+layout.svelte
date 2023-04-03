@@ -2,21 +2,16 @@
 	import Header from './Header.svelte';
 	import './styles.css';
 	import Menu from './Menu.svelte';
-	import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
 
 	let openMenu = false;
 
 	export let data;
-	onMount(()=>{
-		if(!data.isLogin) goto(data.loginLink);
-	})
 </script>
 
 <div class="app">
 	<Header bind:open={openMenu} userPicture={data.userPicture}/>
 	<main>
-		<Menu bind:open={openMenu} userName={data.userName}/>
+		<Menu bind:open={openMenu} userName={data.userName} isLogin={data.isLogin}/>
 		<slot/>
 	</main>
 	<footer>
@@ -46,10 +41,6 @@
 		justify-content: center;
 		align-items: center;
 		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
 	}
 
 	@media (min-width: 480px) {
