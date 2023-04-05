@@ -27,6 +27,7 @@
 <style>
 	.userPicture{
 		border-radius: 50%;
-		height: -webkit-fill-available;
+		height: 3rem;
+		width: 3rem;
 	}
 </style>

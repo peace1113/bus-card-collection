@@ -59,6 +59,40 @@ export const GET: RequestHandler = async ({url}) => {
     return new Response(JSON.stringify(result), {status:  200});
 };
 
+export const POST: RequestHandler = async ({request}) => {
+    const req = await request.json() as LineIdToken;
+    let result = {
+        isSuccessful: false,
+        userInfo: null as User | null
+    }
+
+    //check if user is existed
+    let isUserExistedResult = await isUserExisted(req);
+    if(isUserExistedResult.result){
+        result = {isSuccessful: true, userInfo: isUserExistedResult.user};
+    }
+
+    //if not existed, check if is bus member
+    let isBusMemberResult = await isBusMember(req);
+
+    //if is bus member, insert user
+    if(isBusMemberResult.result){
+        await client.connect();
+        const database = client.db("BusCards");
+        const users = database.collection<User>("Users");
+        let insertUser = {
+            realName: isBusMemberResult.name, 
+            lineName: req.name, 
+            sub: req.sub, 
+            picture: req.picture,
+        } as User;
+        await users.insertOne(insertUser);
+        result = {isSuccessful: true, userInfo: insertUser};
+    }
+
+    return new Response(JSON.stringify(result));
+};
+
 const isUserExisted = async (userInfo: LineIdToken) => {
     try{
         await client.connect();
